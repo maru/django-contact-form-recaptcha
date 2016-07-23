@@ -1,7 +1,10 @@
+# -*- coding: utf-8 -*-
 """
 View which can render and send email from a contact form.
 
 """
+
+from __future__ import unicode_literals
 
 from django.core.urlresolvers import reverse
 from django.views.generic.edit import FormView
@@ -49,6 +52,7 @@ class ContactFormView(FormView):
         # instantiated.
         if self.recipient_list is not None:
             kwargs.update({'recipient_list': self.recipient_list})
+
         return kwargs
 
     def get_success_url(self):

@@ -2,17 +2,17 @@ import os
 
 from setuptools import setup
 
-
 setup(name='django-contact-form',
-      version='1.3-pre-alpha',
+      version='1.3.1',
       zip_safe=False, # eggs are the devil.
       description='Generic contact-form application for Django',
       long_description=open(os.path.join(os.path.dirname(__file__),
                                          'README.rst')).read(),
-      author='James Bennett',
-      author_email='james@b-list.org',
-      url='https://github.com/ubernostrum/django-contact-form/',
+      author='Maru Berezin',
+      url='https://github.com/maru/django-contact-form/',
       packages=['contact_form', 'contact_form.tests'],
+      package_data={'contact_form': [ #'locale/',
+            'templates/contact_form/*.html', 'templates/contact_form/*.txt']},
       test_suite='contact_form.runtests.run_tests',
       classifiers=['Development Status :: 5 - Production/Stable',
                    'Environment :: Web Environment',

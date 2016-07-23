@@ -1,8 +1,11 @@
+# -*- coding: utf-8 -*-
 """
 A base contact form for allowing users to send email messages through
 a web interface.
 
 """
+
+from __future__ import unicode_literals
 
 from django import forms
 from django.conf import settings
@@ -12,6 +15,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.mail import send_mail
 from django.template import RequestContext, loader
 
+from captcha.fields import ReCaptchaField
 
 class ContactForm(forms.Form):
     """
@@ -23,8 +27,11 @@ class ContactForm(forms.Form):
                            label=_(u'Your name'))
     email = forms.EmailField(max_length=200,
                              label=_(u'Your email address'))
+    title = forms.CharField(max_length=200,
+                             label=_(u'Subject'))
     body = forms.CharField(widget=forms.Textarea,
                            label=_(u'Your message'))
+    captcha = ReCaptchaField(attrs={})
 
     from_email = settings.DEFAULT_FROM_EMAIL
 
@@ -41,8 +48,17 @@ class ContactForm(forms.Form):
         self.request = request
         if recipient_list is not None:
             self.recipient_list = recipient_list
+
         super(ContactForm, self).__init__(data=data, files=files,
                                           *args, **kwargs)
+
+    def from_email(self):
+        """
+        Use name and email for the "From:" header
+        """
+        self.get_context() # Valid data
+        return '"%s" <%s>' % (self.cleaned_data['name'],
+                              self.cleaned_data['email'])
 
     def message(self):
         """

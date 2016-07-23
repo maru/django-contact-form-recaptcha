@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Example URLConf for a contact form.
 
@@ -7,11 +8,12 @@ include this URLConf somewhere in your URL hierarchy (for example, at
 
 """
 
+from __future__ import unicode_literals
+
 from django.conf.urls import url
 from django.views.generic import TemplateView
 
 from contact_form.views import ContactFormView
-
 
 urlpatterns = [
     url(r'^$',

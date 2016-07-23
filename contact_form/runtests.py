@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 A standalone test runner script, configuring the minimum settings
 required for django-contact-form' tests to execute.
@@ -7,6 +8,8 @@ settings and/or templates in order to execute their tests, while
 django-contact-form does not.
 
 """
+
+from __future__ import unicode_literals
 
 import os
 import sys
