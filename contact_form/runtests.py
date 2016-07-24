@@ -56,6 +56,7 @@ SETTINGS_DICT = {
     'RECAPTCHA_LANG': 'en',
 }
 
+
 def run_tests():
     # Making Django run this way is a two-step process. First, call
     # settings.configure() to give Django settings to work with:

@@ -16,6 +16,7 @@ from django.template import RequestContext, loader
 
 from captcha.fields import ReCaptchaField
 
+
 class ContactForm(forms.Form):
     """
     The base contact form class from which all contact form classes
@@ -27,10 +28,10 @@ class ContactForm(forms.Form):
     email = forms.EmailField(max_length=200,
                              label=_(u'Your email address'))
     title = forms.CharField(max_length=200,
-                             label=_(u'Subject'))
+                            label=_(u'Subject'))
     body = forms.CharField(widget=forms.Textarea,
                            label=_(u'Your message'))
-    captcha = ReCaptchaField(attrs={'lang':settings.RECAPTCHA_LANG})
+    captcha = ReCaptchaField(attrs={'lang': settings.RECAPTCHA_LANG})
 
     from_email = settings.DEFAULT_FROM_EMAIL
 
