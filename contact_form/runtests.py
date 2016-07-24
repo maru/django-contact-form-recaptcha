@@ -28,6 +28,7 @@ SETTINGS_DICT = {
         'django.contrib.auth',
         'django.contrib.contenttypes',
         'django.contrib.sites',
+        'captcha',
     ),
     'ROOT_URLCONF': 'contact_form.tests.urls',
     'DATABASES': {
@@ -54,7 +55,6 @@ SETTINGS_DICT = {
     'RECAPTCHA_USE_SSL': True,
     'RECAPTCHA_LANG': 'en',
 }
-
 
 def run_tests():
     # Making Django run this way is a two-step process. First, call

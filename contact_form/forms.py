@@ -9,8 +9,7 @@ from __future__ import unicode_literals
 
 from django import forms
 from django.conf import settings
-from django.contrib.sites.models import Site
-from django.contrib.sites.requests import RequestSite
+from django.contrib.sites.shortcuts import get_current_site
 from django.utils.translation import ugettext_lazy as _
 from django.core.mail import send_mail
 from django.template import RequestContext, loader
@@ -31,7 +30,7 @@ class ContactForm(forms.Form):
                              label=_(u'Subject'))
     body = forms.CharField(widget=forms.Textarea,
                            label=_(u'Your message'))
-    captcha = ReCaptchaField(attrs={})
+    captcha = ReCaptchaField(attrs={'lang':settings.RECAPTCHA_LANG})
 
     from_email = settings.DEFAULT_FROM_EMAIL
 
@@ -56,7 +55,6 @@ class ContactForm(forms.Form):
         """
         Use name and email for the "From:" header
         """
-        self.get_context() # Valid data
         return '"%s" <%s>' % (self.cleaned_data['name'],
                               self.cleaned_data['email'])
 
@@ -104,13 +102,9 @@ class ContactForm(forms.Form):
             raise ValueError(
                 "Cannot generate Context from invalid contact form"
             )
-        if Site._meta.installed:
-            site = Site.objects.get_current()
-        else:
-            site = RequestSite(self.request)
         return RequestContext(self.request,
                               dict(self.cleaned_data,
-                                   site=site))
+                                   site=get_current_site(self.request)))
 
     def get_message_dict(self):
         """

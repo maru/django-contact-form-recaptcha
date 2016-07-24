@@ -1,3 +1,5 @@
+import os
+
 from django.conf import settings
 from django.core import mail
 from django.core.urlresolvers import reverse
@@ -9,6 +11,12 @@ from ..forms import ContactForm
 
 @override_settings(ROOT_URLCONF='contact_form.tests.test_urls')
 class ContactFormViewTests(TestCase):
+
+    def setUp(self):
+        os.environ['RECAPTCHA_TESTING'] = 'True'
+
+    def tearDown(self):
+        del os.environ['RECAPTCHA_TESTING']
 
     def test_get(self):
         """
@@ -30,7 +38,10 @@ class ContactFormViewTests(TestCase):
         contact_url = reverse('contact_form')
         data = {'name': 'Test',
                 'email': 'test@example.com',
-                'body': 'Test message'}
+                'title': 'Test',
+                'body': 'Test message',
+                'g-recaptcha-response': 'PASSED',
+                }
 
         response = self.client.post(contact_url,
                                     data=data)
@@ -42,8 +53,10 @@ class ContactFormViewTests(TestCase):
 
         message = mail.outbox[0]
         self.assertTrue(data['body'] in message.body)
-        self.assertEqual(settings.DEFAULT_FROM_EMAIL,
-                         message.from_email)
+
+        from_email = '"%s" <%s>' % (data['name'], data['email'])
+        self.assertEqual(from_email, message.from_email)
+
         form = ContactForm(request=RequestFactory().request)
         self.assertEqual(form.recipient_list,
                          message.recipients())
@@ -76,7 +89,10 @@ class ContactFormViewTests(TestCase):
         contact_url = reverse('test_recipient_list')
         data = {'name': 'Test',
                 'email': 'test@example.com',
-                'body': 'Test message'}
+                'title': 'Test',
+                'body': 'Test message',
+                'g-recaptcha-response': 'PASSED',
+                }
 
         response = self.client.post(contact_url,
                                     data=data)
