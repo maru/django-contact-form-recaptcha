@@ -46,6 +46,13 @@ SETTINGS_DICT = {
     'SITE_ID': 1,
     'DEFAULT_FROM_EMAIL': 'contact@example.com',
     'MANAGERS': [('Manager', 'noreply@example.com')],
+
+    # RECAPTCHA
+    'RECAPTCHA_PUBLIC_KEY': 'public_key',
+    'RECAPTCHA_PRIVATE_KEY': 'private_key',
+    'NOCAPTCHA': True,
+    'RECAPTCHA_USE_SSL': True,
+    'RECAPTCHA_LANG': 'en',
 }
 
 
