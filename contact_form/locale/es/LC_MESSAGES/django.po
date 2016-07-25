@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-07-23 20:18-0300\n"
+"POT-Creation-Date: 2016-07-24 15:30-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Last-Translator: Maru Berezin\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -20,31 +20,35 @@ msgstr ""
 
 #: forms.py:27
 msgid "Your name"
-msgstr ""
+msgstr "Su nombre"
 
 #: forms.py:29
 msgid "Your email address"
-msgstr ""
+msgstr "Su dirección email"
 
 #: forms.py:31
 msgid "Subject"
-msgstr ""
+msgstr "Asunto"
 
 #: forms.py:33
 msgid "Your message"
-msgstr ""
+msgstr "Su mensaje"
 
 #: templates/contact_form/contact_form.html:3
 #: templates/contact_form/contact_form.html:9
 #: templates/contact_form/contact_form_sent.html:3
 #: templates/contact_form/contact_form_subject.txt:1
 msgid "Contact"
-msgstr ""
+msgstr "Contacto"
 
 #: templates/contact_form/contact_form.html:17
 msgid "Submit"
-msgstr ""
+msgstr "Enviar"
 
 #: templates/contact_form/contact_form_sent.html:10
 msgid "Message sent"
-msgstr ""
+msgstr "Mensaje enviado"
+
+#: templates/contact_form/contact_form_sent.html:11
+msgid "Thank you! We've received your request and we'll contact you shortly."
+msgstr "¡Gracias! Hemos recibido su pedido y pronto nos pondremos en contacto."
