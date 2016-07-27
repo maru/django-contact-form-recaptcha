@@ -51,4 +51,4 @@ msgstr "Mensaje enviado"
 
 #: templates/contact_form/contact_form_sent.html:11
 msgid "Thank you! We've received your request and we'll contact you shortly."
-msgstr "Gracias! Hemos recibido tu pedido y pronto nos pondremos en contacto."
+msgstr "¡Gracias! Hemos recibido tu pedido y pronto nos pondremos en contacto."
