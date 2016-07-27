@@ -16,3 +16,5 @@ for `Django <https://www.djangoproject.com/>`_ sites.
 
 Full documentation for all functionality is included and is also
 `available online <http://django-contact-form.readthedocs.org/>`_.
+
+Originally forked from `django-contact-form <https://github.com/ubernostrum/django-contact-form>`_.
