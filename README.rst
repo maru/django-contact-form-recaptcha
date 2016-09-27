@@ -1,7 +1,7 @@
 .. -*-restructuredtext-*-
 
-.. image:: https://travis-ci.org/maru/django-contact-form.svg?branch=master
-    :target: https://travis-ci.org/maru/django-contact-form
+.. image:: https://travis-ci.org/maru/django-contact-form-recaptcha.svg
+    :target: https://travis-ci.org/maru/django-contact-form-recaptcha
 
 This application provides simple, extensible contact-form functionality
 for `Django <https://www.djangoproject.com/>`_ sites.
