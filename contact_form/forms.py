@@ -31,7 +31,9 @@ class ContactForm(forms.Form):
                             label=_(u'Subject'))
     body = forms.CharField(widget=forms.Textarea,
                            label=_(u'Your message'))
-    captcha = ReCaptchaField(attrs={'lang': settings.RECAPTCHA_LANG})
+
+    if hasattr(settings, 'RECAPTCHA_PUBLIC_KEY'):
+        captcha = ReCaptchaField(attrs={'lang': settings.RECAPTCHA_LANG})
 
     from_email = settings.DEFAULT_FROM_EMAIL
 
