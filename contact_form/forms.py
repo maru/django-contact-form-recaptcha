@@ -1,20 +1,14 @@
-# -*- coding: utf-8 -*-
 """
 A base contact form for allowing users to send email messages through
 a web interface.
 
 """
-
-from __future__ import unicode_literals
-
 from django import forms
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.translation import ugettext_lazy as _
 from django.core.mail import send_mail
 from django.template import RequestContext, loader
-
-from captcha.fields import ReCaptchaField
 
 
 class ContactForm(forms.Form):
@@ -32,9 +26,6 @@ class ContactForm(forms.Form):
     body = forms.CharField(widget=forms.Textarea,
                            label=_(u'Your message'))
 
-    if hasattr(settings, 'RECAPTCHA_PUBLIC_KEY'):
-        captcha = ReCaptchaField(attrs={'lang': settings.RECAPTCHA_LANG})
-
     from_email = settings.DEFAULT_FROM_EMAIL
 
     recipient_list = [mail_tuple[1] for mail_tuple in settings.MANAGERS]
@@ -50,7 +41,6 @@ class ContactForm(forms.Form):
         self.request = request
         if recipient_list is not None:
             self.recipient_list = recipient_list
-
         super(ContactForm, self).__init__(data=data, files=files,
                                           *args, **kwargs)
 
@@ -66,12 +56,12 @@ class ContactForm(forms.Form):
         Render the body of the message to a string.
 
         """
-        if callable(self.template_name):
-            template_name = self.template_name()
-        else:
-            template_name = self.template_name
-        return loader.render_to_string(template_name,
-                                       self.get_context())
+        template_name = self.template_name() if \
+            callable(self.template_name) \
+            else self.template_name
+        return loader.render_to_string(
+            template_name, self.get_context(), request=self.request
+        )
 
     def subject(self):
         """
@@ -81,8 +71,9 @@ class ContactForm(forms.Form):
         template_name = self.subject_template_name() if \
             callable(self.subject_template_name) \
             else self.subject_template_name
-        subject = loader.render_to_string(template_name,
-                                          self.get_context())
+        subject = loader.render_to_string(
+            template_name, self.get_context(), request=self.request
+        )
         return ''.join(subject.splitlines())
 
     def get_context(self):
@@ -105,9 +96,7 @@ class ContactForm(forms.Form):
             raise ValueError(
                 "Cannot generate Context from invalid contact form"
             )
-        return RequestContext(self.request,
-                              dict(self.cleaned_data,
-                                   site=get_current_site(self.request)))
+        return dict(self.cleaned_data, site=get_current_site(self.request))
 
     def get_message_dict(self):
         """
@@ -143,3 +132,74 @@ class ContactForm(forms.Form):
 
         """
         send_mail(fail_silently=fail_silently, **self.get_message_dict())
+
+
+class AkismetContactForm(ContactForm):
+    """
+    Contact form which doesn't add any extra fields, but does add an
+    Akismet spam check to the validation routine.
+
+    Requires the Python Akismet library, and two configuration
+    parameters: an Akismet API key and the URL the key is associated
+    with. These can be supplied either as the settings AKISMET_API_KEY
+    and AKISMET_BLOG_URL, or the environment variables
+    PYTHON_AKISMET_API_KEY and PYTHON_AKISMET_BLOG_URL.
+
+    """
+    SPAM_MESSAGE = _(u"Your message was classified as spam.")
+
+    def clean_body(self):
+        if 'body' in self.cleaned_data:
+            from akismet import Akismet
+            akismet_api = Akismet(
+                key=getattr(settings, 'AKISMET_API_KEY', None),
+                blog_url=getattr(settings, 'AKISMET_BLOG_URL', None)
+            )
+            akismet_kwargs = {
+                'user_ip': self.request.META['REMOTE_ADDR'],
+                'user_agent': self.request.META.get('HTTP_USER_AGENT'),
+                'comment_author': self.cleaned_data.get('name'),
+                'comment_author_email': self.cleaned_data.get('email'),
+                'comment_content': self.cleaned_data['body'],
+                'comment_type': 'contact-form',
+            }
+            if akismet_api.comment_check(**akismet_kwargs):
+                raise forms.ValidationError(
+                    self.SPAM_MESSAGE
+                )
+            return self.cleaned_data['body']
+
+
+class ReCaptchaContactForm(ContactForm):
+    """
+    Contact form which adds an extra field: captcha.
+
+    Requires the Python django-recaptcha library, and two configuration
+    parameters: a ReCaptcha public and private key. These can be
+    supplied either as the settings RECAPTCHA_PUBLIC_KEY
+    and RECAPTCHA_PRIVATE_KEY, or the environment variables
+    PYTHON_RECAPTCHA_PUBLIC_KEY and PYTHON_RECAPTCHA_PRIVATE_KEY.
+
+    Other options:
+    - settings.RECAPTCHA_LANG: language code, string.
+      See https://developers.google.com/recaptcha/docs/language
+    - settings.RECAPTCHA_OPTIONS: options, JSON format.
+      See https://developers.google.com/recaptcha/old/docs/customization
+    """
+
+    import json
+    from captcha.fields import ReCaptchaField
+
+    from django.utils.safestring import mark_safe
+
+    def __init__(*args, **kwargs):
+
+        attrs = {}
+        if hasattr(settings, 'RECAPTCHA_LANG'):
+            attrs['lang'] = settings.RECAPTCHA_LANG
+        if hasattr(settings, 'RECAPTCHA_OPTIONS'):
+            attrs.update(settings.RECAPTCHA_OPTIONS)
+
+        self.captcha = ReCaptchaField(attrs=attrs)
+
+        super(ReCaptchaContactForm, self).__init__(*args, **kwargs)
