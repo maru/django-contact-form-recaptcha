@@ -1,0 +1,4 @@
+akismet
+coverage
+flake8
+mock
