@@ -12,15 +12,15 @@ django-contact-form-recaptcha
 This application provides simple, extensible contact-form functionality
 for `Django <https://www.djangoproject.com/>`_ sites.
 
+.. image:: docs/_static/contact_form_recaptcha.png
+
 *  Mail header 'From: "Your Name" <your@email.com>', so it's easy to reply to the sender.
 
-*  Subject provided by the user. 
+*  Subject provided by the user.
 
 *  Uses `reCAPTCHA <https://www.google.com/recaptcha>`_ to block spam robots.
 
 *  Templates using Twitter Bootstrap version 3.
-
-*  Locale
 
 Full documentation for all functionality is included and is also
 `available online <http://django-contact-form-recaptcha.readthedocs.io/>`_.
