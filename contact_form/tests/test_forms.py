@@ -18,6 +18,7 @@ class ContactFormTests(TestCase):
     """
     valid_data = {'name': 'Test',
                   'email': 'test@example.com',
+                  'title': 'Test title',
                   'body': 'Test message'}
 
     def request(self):
@@ -55,7 +56,9 @@ class ContactFormTests(TestCase):
 
         message = mail.outbox[0]
         self.assertTrue(self.valid_data['body'] in message.body)
-        self.assertEqual(settings.DEFAULT_FROM_EMAIL,
+        from_email = '"%s" <%s>' % (form.cleaned_data['name'],
+                                    form.cleaned_data['email'])
+        self.assertEqual(from_email,
                          message.from_email)
         self.assertEqual(form.recipient_list,
                          message.recipients())
@@ -174,6 +177,7 @@ class AkismetContactFormTests(TestCase):
         """
         data = {'name': 'viagra-test-123',
                 'email': 'email@example.com',
+                'title': 'Test title',
                 'body': 'This is spam.'}
         with mock.patch('akismet.Akismet', autospec=True) as akismet_mock:
             instance = akismet_mock.return_value
@@ -196,6 +200,7 @@ class AkismetContactFormTests(TestCase):
         """
         data = {'name': 'Test',
                 'email': 'email@example.com',
+                'title': 'Test title',
                 'body': 'Test message.'}
         with mock.patch('akismet.Akismet', autospec=True) as akismet_mock:
             instance = akismet_mock.return_value
@@ -215,6 +220,7 @@ class ReCaptchaContactFormTests(TestCase):
     """
     valid_data = {'name': 'Test',
                   'email': 'test@example.com',
+                  'title': 'Test title',
                   'body': 'Test message'}
 
     def setUp(self):

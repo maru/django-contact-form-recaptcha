@@ -21,6 +21,8 @@ class ContactForm(forms.Form):
                            label=_(u'Your name'))
     email = forms.EmailField(max_length=200,
                              label=_(u'Your email address'))
+    title = forms.CharField(max_length=200,
+                            label=_(u'Subject'))
     body = forms.CharField(widget=forms.Textarea,
                            label=_(u'Your message'))
 
@@ -41,6 +43,13 @@ class ContactForm(forms.Form):
             self.recipient_list = recipient_list
         super(ContactForm, self).__init__(data=data, files=files,
                                           *args, **kwargs)
+
+    def from_email(self):
+        """
+        Use name and email for the "From:" header
+        """
+        return '"%s" <%s>' % (self.cleaned_data['name'],
+                              self.cleaned_data['email'])
 
     def message(self):
         """

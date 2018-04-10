@@ -39,6 +39,7 @@ class ContactFormViewTests(TestCase):
         contact_url = reverse('contact_form')
         data = {'name': 'Test',
                 'email': 'test@example.com',
+                'title': 'Test title',
                 'body': 'Test message'}
 
         response = self.client.post(contact_url,
@@ -51,7 +52,8 @@ class ContactFormViewTests(TestCase):
 
         message = mail.outbox[0]
         self.assertTrue(data['body'] in message.body)
-        self.assertEqual(settings.DEFAULT_FROM_EMAIL,
+        from_email = '"%s" <%s>' % (data['name'], data['email'])
+        self.assertEqual(from_email,
                          message.from_email)
         form = ContactForm(request=RequestFactory().request)
         self.assertEqual(form.recipient_list,
@@ -85,6 +87,7 @@ class ContactFormViewTests(TestCase):
         contact_url = reverse('test_recipient_list')
         data = {'name': 'Test',
                 'email': 'test@example.com',
+                'title': 'Test title',
                 'body': 'Test message'}
 
         response = self.client.post(contact_url,
@@ -119,6 +122,7 @@ class AkismetContactFormViewTests(TestCase):
         contact_url = reverse('test_akismet_form')
         data = {'name': 'viagra-test-123',
                 'email': 'email@example.com',
+                'title': 'Spam title',
                 'body': 'This is spam.'}
         with mock.patch('akismet.Akismet', autospec=True) as akismet_mock:
             instance = akismet_mock.return_value
@@ -134,6 +138,7 @@ class AkismetContactFormViewTests(TestCase):
         contact_url = reverse('test_akismet_form')
         data = {'name': 'Test',
                 'email': 'email@example.com',
+                'title': 'Test title',
                 'body': 'Test message.'}
         with mock.patch('akismet.Akismet', autospec=True) as akismet_mock:
             instance = akismet_mock.return_value
@@ -166,6 +171,7 @@ class ReCaptchaContactFormViewTests(TestCase):
         contact_url = reverse('test_captcha_form')
         data = {'name': 'Test',
                 'email': 'test@example.com',
+                'title': 'Test title',
                 'body': 'Test message'}
         data.update({'g-recaptcha-response': 'PASSED'}
                     if getattr(settings, 'NOCAPTCHA', True) else
@@ -181,7 +187,8 @@ class ReCaptchaContactFormViewTests(TestCase):
 
         message = mail.outbox[0]
         self.assertTrue(data['body'] in message.body)
-        self.assertEqual(settings.DEFAULT_FROM_EMAIL,
+        from_email = '"%s" <%s>' % (data['name'], data['email'])
+        self.assertEqual(from_email,
                          message.from_email)
         form = ContactForm(request=RequestFactory().request)
         self.assertEqual(form.recipient_list,

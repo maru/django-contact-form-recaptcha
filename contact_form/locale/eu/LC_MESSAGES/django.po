@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-10 10:54+0200\n"
+"POT-Creation-Date: 2018-04-10 22:50+0200\n"
 "PO-Revision-Date: 2016-04-13 09:32+0200\n"
 "Last-Translator: Urtzi Odriozola <uodriozola@codesyntax.com>\n"
 "Language-Team: \n"
@@ -25,6 +25,10 @@ msgstr "Zure izena"
 #: forms.py:23
 msgid "Your email address"
 msgstr "Zure eposta"
+
+#: forms.py:25
+msgid "Subject"
+msgstr ""
 
 #: forms.py:27
 msgid "Your message"
