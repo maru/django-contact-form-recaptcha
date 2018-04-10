@@ -158,7 +158,7 @@ class ReCaptchaContactFormViewTests(TestCase):
     def setUp(self):
         os.environ['RECAPTCHA_TESTING'] = 'True'
 
-    def test_send(self):
+    def test_captcha_send(self):
         """
         Valid data through the view results in a successful send.
 
@@ -186,3 +186,7 @@ class ReCaptchaContactFormViewTests(TestCase):
         form = ContactForm(request=RequestFactory().request)
         self.assertEqual(form.recipient_list,
                          message.recipients())
+
+    def tearDown(self):
+        del os.environ['RECAPTCHA_TESTING']
+        pass
