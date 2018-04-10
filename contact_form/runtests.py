@@ -60,7 +60,6 @@ SETTINGS_DICT = {
 try:
     from captcha.constants import TEST_PUBLIC_KEY, TEST_PRIVATE_KEY
 
-    SETTINGS_DICT['INSTALLED_APPS'].append('captcha')
     SETTINGS_DICT.update({
         'RECAPTCHA_PUBLIC_KEY':  os.getenv('PYTHON_RECAPTCHA_PUBLIC_KEY',
                                            TEST_PUBLIC_KEY),
