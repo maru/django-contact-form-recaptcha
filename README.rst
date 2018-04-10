@@ -1,5 +1,8 @@
 .. -*-restructuredtext-*-
 
+django-contact-form-recaptcha
+=============================
+
 .. image:: https://travis-ci.org/maru/django-contact-form-recaptcha.svg
     :target: https://travis-ci.org/maru/django-contact-form-recaptcha
 .. image:: https://readthedocs.org/projects/django-contact-form-recaptcha/badge/?version=latest
@@ -9,7 +12,9 @@
 This application provides simple, extensible contact-form functionality
 for `Django <https://www.djangoproject.com/>`_ sites.
 
-*  Mail header From: "Your Name" <your@email.com>
+*  Mail header 'From: "Your Name" <your@email.com>', so it's easy to reply to the sender.
+
+*  Subject provided by the user. 
 
 *  Uses `reCAPTCHA <https://www.google.com/recaptcha>`_ to block spam robots.
 
