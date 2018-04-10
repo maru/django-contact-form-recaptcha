@@ -8,7 +8,7 @@ from django.core import mail
 from django.test import RequestFactory, TestCase
 from django.utils.six import text_type
 
-from ..forms import AkismetContactForm, ContactForm
+from ..forms import AkismetContactForm, ReCaptchaContactForm, ContactForm
 
 
 class ContactFormTests(TestCase):
@@ -55,9 +55,6 @@ class ContactFormTests(TestCase):
 
         message = mail.outbox[0]
         self.assertTrue(self.valid_data['body'] in message.body)
-        # from_email = '"%s" <%s>' % (form.cleaned_data['name'],
-        #                             form.cleaned_data['email'])
-        # self.assertEqual(from_email, message.from_email)
         self.assertEqual(settings.DEFAULT_FROM_EMAIL,
                          message.from_email)
         self.assertEqual(form.recipient_list,
@@ -209,3 +206,46 @@ class AkismetContactFormTests(TestCase):
                 data=data
             )
             self.assertTrue(form.is_valid())
+
+
+class ReCaptchaContactFormTests(TestCase):
+    """
+    Tests the ReCaptcha contact form.
+
+    """
+    valid_data = {'name': 'Test',
+                  'email': 'test@example.com',
+                  'body': 'Test message'}
+
+    def setUp(self):
+        os.environ['RECAPTCHA_TESTING'] = 'True'
+
+    def request(self):
+        return RequestFactory().request()
+
+    def test_captcha_envvar_enabled(self):
+        data = self.valid_data
+        data.update({'g-recaptcha-response': 'PASSED'}
+                    if getattr(settings, 'NOCAPTCHA', True) else
+                    {'recaptcha_response_field': 'PASSED'})
+        form = ReCaptchaContactForm(
+            request=self.request(),
+            data=data
+        )
+        self.assertTrue(form.is_valid())
+
+    def test_captcha_envvar_disabled(self):
+        os.environ['RECAPTCHA_TESTING'] = 'False'
+        data = self.valid_data
+        data.update({'g-recaptcha-response': 'PASSED'}
+                    if getattr(settings, 'NOCAPTCHA', True) else
+                    {'recaptcha_response_field': 'PASSED'})
+        form = ReCaptchaContactForm(
+            request=self.request(),
+            data=data
+        )
+        self.assertFalse(form.is_valid())
+
+    def tearDown(self):
+        del os.environ['RECAPTCHA_TESTING']
+        pass

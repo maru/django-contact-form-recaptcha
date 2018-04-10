@@ -21,8 +21,6 @@ class ContactForm(forms.Form):
                            label=_(u'Your name'))
     email = forms.EmailField(max_length=200,
                              label=_(u'Your email address'))
-    # title = forms.CharField(max_length=200,
-    #                         label=_(u'Subject'))
     body = forms.CharField(widget=forms.Textarea,
                            label=_(u'Your message'))
 
@@ -44,13 +42,6 @@ class ContactForm(forms.Form):
         super(ContactForm, self).__init__(data=data, files=files,
                                           *args, **kwargs)
 
-    # def from_email(self):
-    #     """
-    #     Use name and email for the "From:" header
-    #     """
-    #     return '"%s" <%s>' % (self.cleaned_data['name'],
-    #                           self.cleaned_data['email'])
-    #
     def message(self):
         """
         Render the body of the message to a string.
@@ -170,36 +161,24 @@ class AkismetContactForm(ContactForm):
             return self.cleaned_data['body']
 
 
-# class ReCaptchaContactForm(ContactForm):
-#     """
-#     Contact form which adds an extra field: captcha.
-#
-#     Requires the Python django-recaptcha library, and two configuration
-#     parameters: a ReCaptcha public and private key. These can be
-#     supplied either as the settings RECAPTCHA_PUBLIC_KEY
-#     and RECAPTCHA_PRIVATE_KEY, or the environment variables
-#     PYTHON_RECAPTCHA_PUBLIC_KEY and PYTHON_RECAPTCHA_PRIVATE_KEY.
-#
-#     Other options:
-#     - settings.RECAPTCHA_LANG: language code, string.
-#       See https://developers.google.com/recaptcha/docs/language
-#     - settings.RECAPTCHA_OPTIONS: options, JSON format.
-#       See https://developers.google.com/recaptcha/old/docs/customization
-#     """
-#
-#     import json
-#     from captcha.fields import ReCaptchaField
-#
-#     from django.utils.safestring import mark_safe
-#
-#     def __init__(*args, **kwargs):
-#
-#         attrs = {}
-#         if hasattr(settings, 'RECAPTCHA_LANG'):
-#             attrs['lang'] = settings.RECAPTCHA_LANG
-#         if hasattr(settings, 'RECAPTCHA_OPTIONS'):
-#             attrs.update(settings.RECAPTCHA_OPTIONS)
-#
-#         self.captcha = ReCaptchaField(attrs=attrs)
-#
-#         super(ReCaptchaContactForm, self).__init__(*args, **kwargs)
+class ReCaptchaContactForm(ContactForm):
+    """
+    Contact form which adds an extra field: captcha.
+
+    Requires the Python django-recaptcha library, and two configuration
+    parameters: a ReCaptcha public and private key. These can be
+    supplied either as the settings RECAPTCHA_PUBLIC_KEY
+    and RECAPTCHA_PRIVATE_KEY, or the environment variables
+    PYTHON_RECAPTCHA_PUBLIC_KEY and PYTHON_RECAPTCHA_PRIVATE_KEY.
+
+    Other options:
+    - settings.RECAPTCHA_LANG: language code, string.
+      See https://developers.google.com/recaptcha/docs/language
+    """
+    import os
+    from captcha.fields import ReCaptchaField
+    captcha = ReCaptchaField(
+      attrs={'lang': getattr(settings, 'RECAPTCHA_LANG', None),
+             'RECAPTCHA_PUBLIC_KEY': os.getenv('PYTHON_RECAPTCHA_PUBLIC_KEY'),
+             'RECAPTCHA_PRIVATE_KEY': os.getenv('PYTHON_RECAPTCHA_PRIVATE_KEY')
+             })
