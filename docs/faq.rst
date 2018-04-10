@@ -5,39 +5,27 @@ Frequently asked questions
 ==========================
 
 The following notes answer some common questions, and may be useful to
-you when installing, configuring or using django-contact-form.
+you when installing, configuring or using django-contact-form-recaptcha.
 
 
 What versions of Django and Python are supported?
 -------------------------------------------------
 
-As of django-contact-form |release|, Django 1.11 and 2.0 are
+As of django-contact-form-recaptcha |release|, Django 1.11 and 2.0 are
 supported, on Python 2.7 (Django 1.11 only), 3.4, 3.5, or 3.6.
 
 
-What license is django-contact-form under?
+What license is django-contact-form-recaptcha under?
 ----------------------------------------------
 
-django-contact-form is offered under a three-clause BSD-style
+django-contact-form-recaptcha is offered under a three-clause BSD-style
 license; this is `an OSI-approved open-source license
 <http://www.opensource.org/licenses/bsd-license.php>`_, and allows you
 a large degree of freedom in modifiying and redistributing the
 code. For the full terms, see the file ``LICENSE`` which came with
-your copy of django-contact-form; if you did not receive a copy of
+your copy of django-contact-form-recaptcha; if you did not receive a copy of
 this file, you can view it online at
-<https://github.com/ubernostrum/django-contact-form/blob/master/LICENSE>.
-
-
-Why aren't there any default templates I can use?
--------------------------------------------------
-
-Usable default templates, for an application designed to be widely
-reused, are essentially impossible to produce; variations in site
-design, block structure, etc. cannot be reliably accounted for. As
-such, django-contact-form provides bare-bones (i.e., containing no
-HTML structure whatsoever) templates in its source distribution to
-enable running tests, and otherwise just provides good documentation
-of all required templates and the context made available to them.
+<https://github.com/maru/django-contact-form-recaptcha/blob/master/LICENSE>.
 
 
 Why am I getting a bunch of ``BadHeaderError`` exceptions?
@@ -66,11 +54,11 @@ message body can (and usually does) contain newlines.
 I found a bug or want to make an improvement!
 ---------------------------------------------
 
-The canonical development repository for django-contact-form is
-online at <https://github.com/ubernostrum/django-contact-form>. Issues
+The canonical development repository for django-contact-form-recaptcha is
+online at <https://github.com/maru/django-contact-form-recaptcha>. Issues
 and pull requests can both be filed there.
 
-If you'd like to contribute to django-contact-form, that's great!
+If you'd like to contribute to django-contact-form-recaptcha, that's great!
 Just please remember that pull requests should include tests and
 documentation for any changes made, and that following `PEP 8
 <https://www.python.org/dev/peps/pep-0008/>`_ is mandatory. Pull
@@ -82,7 +70,7 @@ the build.
 I'm getting errors about "akismet" when trying to run tests?
 ------------------------------------------------------------
 
-The full test suite of django-contact-form exercises all of its
+The full test suite of django-contact-form-recaptcha exercises all of its
 functionality, including the spam-filtering
 :class:`~contact_forms.forms.AkismetContactForm`. That class uses `the
 Wordpress Akismet spam-detection service <https://akismet.com/>`_ to

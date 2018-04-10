@@ -51,7 +51,7 @@ Built-in views
 
        The URL to redirect to after successful form submission. By
        default, this is the named URL ``contact_form.sent``. In the
-       default URLconf provided with django-contact-form, that URL
+       default URLconf provided with django-contact-form-recaptcha, that URL
        is mapped to ``TemplateView`` rendering the template
        ``contact_form/contact_form_sent.html``.
 

@@ -4,10 +4,10 @@
 Contact form classes
 ====================
 
-There are two contact-form classes included in django-contact-form;
+There are three contact-form classes included in django-contact-form-recaptcha;
 one provides all the infrastructure for a contact form, and will
 usually be the base class for subclasses which want to extend or
-modify functionality. The other is a subclass which adds spam
+modify functionality. The other two are subclasses which add spam
 filtering to the contact form.
 
 
@@ -21,7 +21,7 @@ The ContactForm class
 
     If you don't need any customization, you can use this form to
     provide basic contact-form functionality; it will collect name,
-    email address and message.
+    email address, subject and message.
 
     The :class:`~contact_form.views.ContactFormView` included in this
     application knows how to work with this form and can handle many
@@ -175,8 +175,8 @@ The Akismet (spam-filtering) contact form class
    You will also need `the Python Akismet module
    <http://akismet.readthedocs.io/>`_ to communicate with the Akismet
    web service. You can install it by running ``pip install akismet``,
-   or django-contact-form can install it automatically for you if you
-   run ``pip install django-contact-form[akismet]``.
+   or django-contact-form-recaptcha can install it automatically for you if you
+   run ``pip install django-contact-form-recaptcha[akismet]``.
 
    Once you have an Akismet API key and URL configured, and the
    ``akismet`` module installed, you can drop in
@@ -207,6 +207,66 @@ The Akismet (spam-filtering) contact form class
           url(r'^contact-form/$',
               ContactForm.as_view(
 	          form_class=AkismetContactForm
+	      ),
+              name='contact_form'),
+      ]
+
+
+The ReCaptcha (spam-filtering) contact form class
+-------------------------------------------------
+
+.. class:: ReCaptchaContactForm
+
+   A subclass of :class:`ContactForm` which adds spam filtering, via
+   `the Google reCAPTCHA spam-detection service
+   <https://www.google.com/recaptcha>`_.
+
+   Use of this class requires you to provide configuration for the
+   reCAPTCHA web service; you'll need to obtain the reCAPTCHA API keys.
+   You can do this at <https://www.google.com/recaptcha>. Once you have,
+   you can configure in either of two ways:
+
+   1. Put your reCAPTCHA API keys in the Django settings
+      ``RECAPTCHA_PUBLIC_KEY`` and ``RECAPTCHA_PRIVATE_KEY``, or
+
+   2. Put your reCAPTCHA API keys in the environment variables
+      ``PYTHON_RECAPTCHA_PUBLIC_KEY`` and ``PYTHON_RECAPTCHA_PRIVATE_KEY``.
+
+   You will also need `the Python reCAPTCHA module
+   <https://github.com/praekelt/django-recaptcha>`_ to communicate with the reCAPTCHA
+   web service. You can install it by running ``pip install django-recaptcha``,
+   or django-contact-form-recaptcha can install it automatically for you if you
+   run ``pip install django-contact-form-recaptcha[captcha]``.
+
+   Once you have the reCAPTCHA API keys configured, and the
+   ``django-captcha`` module installed, you can drop in
+   ``ReCaptchaContactForm`` anywhere you would have used
+   :class:`ContactForm`. For example, you could define a view
+   (subclassing :class:`~contact_form.views.ContactFormView`) like so,
+   and then point a URL at it:
+
+   .. code-block:: python
+
+      from contact_form.forms import ReCaptchaContactForm
+      from contact_form.views import ContactFormView
+
+      class ReCaptchaContactFormView(ContactFormView):
+          form_class = ReCaptchaContactForm
+
+   Or directly specify the form in your URLconf:
+
+   .. code-block:: python
+
+      from django.conf.urls import url
+
+      from contact_form.forms import ReCaptchaContactForm
+      from contact_form.views import ContactFormView
+
+      urlpatterns = [
+          # other URL patterns...
+          url(r'^contact-form/$',
+              ContactForm.as_view(
+	          form_class=ReCaptchaContactForm
 	      ),
               name='contact_form'),
       ]
