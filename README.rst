@@ -1,7 +1,9 @@
 .. -*-restructuredtext-*-
 
-.. image:: https://travis-ci.org/maru/django-contact-form-recaptcha.svg
+.. image:: https://travis-ci.org/maru/django-contact-form-recaptcha.svg 
     :target: https://travis-ci.org/maru/django-contact-form-recaptcha
+.. image:: https://readthedocs.org/projects/django-contact-form-recaptcha/badge/?version=latest
+    :target: http://django-contact-form-recaptcha.readthedocs.io/en/latest/?badge=latest
 
 This application provides simple, extensible contact-form functionality
 for `Django <https://www.djangoproject.com/>`_ sites.
