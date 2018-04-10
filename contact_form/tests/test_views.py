@@ -1,21 +1,23 @@
 import os
+import unittest
 
+import mock
+
+from django.conf import settings
 from django.core import mail
-from django.core.urlresolvers import reverse
 from django.test import RequestFactory, TestCase
 from django.test.utils import override_settings
 
 from ..forms import ContactForm
 
+try:
+    from django.urls import reverse
+except ImportError:  # pragma: no cover
+    from django.core.urlresolvers import reverse  # pragma: no cover
+
 
 @override_settings(ROOT_URLCONF='contact_form.tests.test_urls')
 class ContactFormViewTests(TestCase):
-
-    def setUp(self):
-        os.environ['RECAPTCHA_TESTING'] = 'True'
-
-    def tearDown(self):
-        del os.environ['RECAPTCHA_TESTING']
 
     def test_get(self):
         """
@@ -37,10 +39,7 @@ class ContactFormViewTests(TestCase):
         contact_url = reverse('contact_form')
         data = {'name': 'Test',
                 'email': 'test@example.com',
-                'title': 'Test',
-                'body': 'Test message',
-                'g-recaptcha-response': 'PASSED',
-                }
+                'body': 'Test message'}
 
         response = self.client.post(contact_url,
                                     data=data)
@@ -52,10 +51,10 @@ class ContactFormViewTests(TestCase):
 
         message = mail.outbox[0]
         self.assertTrue(data['body'] in message.body)
-
-        from_email = '"%s" <%s>' % (data['name'], data['email'])
-        self.assertEqual(from_email, message.from_email)
-
+        # from_email = '"%s" <%s>' % (data['name'], data['email'])
+        # self.assertEqual(from_email, message.from_email)
+        self.assertEqual(settings.DEFAULT_FROM_EMAIL,
+                         message.from_email)
         form = ContactForm(request=RequestFactory().request)
         self.assertEqual(form.recipient_list,
                          message.recipients())
@@ -88,10 +87,7 @@ class ContactFormViewTests(TestCase):
         contact_url = reverse('test_recipient_list')
         data = {'name': 'Test',
                 'email': 'test@example.com',
-                'title': 'Test',
-                'body': 'Test message',
-                'g-recaptcha-response': 'PASSED',
-                }
+                'body': 'Test message'}
 
         response = self.client.post(contact_url,
                                     data=data)
@@ -102,3 +98,55 @@ class ContactFormViewTests(TestCase):
         message = mail.outbox[0]
         self.assertEqual(['recipient_list@example.com'],
                          message.recipients())
+
+
+@unittest.skipUnless(
+    getattr(
+        settings,
+        'AKISMET_API_KEY',
+        os.getenv('PYTHON_AKISMET_API_KEY')
+    ) is not None,
+    "AkismetContactForm requires Akismet configuration"
+)
+class AkismetContactFormViewTests(TestCase):
+    """
+    Tests the views with the Akismet contact form.
+
+    """
+    def test_akismet_view_spam(self):
+        """
+        The Akismet contact form errors on spam.
+
+        """
+        contact_url = reverse('test_akismet_form')
+        data = {'name': 'viagra-test-123',
+                'email': 'email@example.com',
+                'body': 'This is spam.'}
+        with mock.patch('akismet.Akismet', autospec=True) as akismet_mock:
+            instance = akismet_mock.return_value
+            instance.verify_key.return_value = True
+            instance.comment_check.return_value = True
+            response = self.client.post(contact_url,
+                                        data=data)
+            self.assertEqual(200, response.status_code)
+            self.assertFalse(response.context['form'].is_valid())
+            self.assertTrue(response.context['form'].has_error('body'))
+
+    def test_akismet_view_ham(self):
+        contact_url = reverse('test_akismet_form')
+        data = {'name': 'Test',
+                'email': 'email@example.com',
+                'body': 'Test message.'}
+        with mock.patch('akismet.Akismet', autospec=True) as akismet_mock:
+            instance = akismet_mock.return_value
+            instance.verify_key.return_value = True
+            instance.comment_check.return_value = False
+            response = self.client.post(contact_url,
+                                        data=data)
+            self.assertRedirects(response,
+                                 reverse('contact_form_sent'))
+            self.assertEqual(1, len(mail.outbox))
+
+            message = mail.outbox[0]
+            self.assertEqual(['noreply@example.com'],
+                             message.recipients())

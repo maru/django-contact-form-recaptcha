@@ -1,24 +1,24 @@
 import os
+import unittest
 
+import mock
+
+from django.conf import settings
 from django.core import mail
 from django.test import RequestFactory, TestCase
+from django.utils.six import text_type
 
-from ..forms import ContactForm
+from ..forms import AkismetContactForm, ContactForm
 
 
 class ContactFormTests(TestCase):
+    """
+    Tests the base ContactForm.
+
+    """
     valid_data = {'name': 'Test',
                   'email': 'test@example.com',
-                  'title': 'Test',
-                  'body': 'Test message',
-                  'g-recaptcha-response': 'PASSED',
-                  }
-
-    def setUp(self):
-        os.environ['RECAPTCHA_TESTING'] = 'True'
-
-    def tearDown(self):
-        del os.environ['RECAPTCHA_TESTING']
+                  'body': 'Test message'}
 
     def request(self):
         return RequestFactory().request()
@@ -55,10 +55,11 @@ class ContactFormTests(TestCase):
 
         message = mail.outbox[0]
         self.assertTrue(self.valid_data['body'] in message.body)
-
-        from_email = '"%s" <%s>' % (form.cleaned_data['name'],
-                                    form.cleaned_data['email'])
-        self.assertEqual(from_email, message.from_email)
+        # from_email = '"%s" <%s>' % (form.cleaned_data['name'],
+        #                             form.cleaned_data['email'])
+        # self.assertEqual(from_email, message.from_email)
+        self.assertEqual(settings.DEFAULT_FROM_EMAIL,
+                         message.from_email)
         self.assertEqual(form.recipient_list,
                          message.recipients())
 
@@ -151,3 +152,60 @@ class ContactFormTests(TestCase):
 
         self.assertEqual(overridden_data,
                          form.get_message_dict())
+
+
+@unittest.skipUnless(
+    getattr(
+        settings,
+        'AKISMET_API_KEY',
+        os.getenv('PYTHON_AKISMET_API_KEY')
+    ) is not None,
+    "AkismetContactForm requires Akismet configuration"
+)
+class AkismetContactFormTests(TestCase):
+    """
+    Tests the Akismet contact form.
+
+    """
+    def request(self):
+        return RequestFactory().request()
+
+    def test_akismet_form_spam(self):
+        """
+        The Akismet contact form correctly rejects spam.
+
+        """
+        data = {'name': 'viagra-test-123',
+                'email': 'email@example.com',
+                'body': 'This is spam.'}
+        with mock.patch('akismet.Akismet', autospec=True) as akismet_mock:
+            instance = akismet_mock.return_value
+            instance.verify_key.return_value = True
+            instance.comment_check.return_value = True
+            form = AkismetContactForm(
+                request=self.request(),
+                data=data
+            )
+            self.assertFalse(form.is_valid())
+            self.assertTrue(
+                text_type(form.SPAM_MESSAGE) in
+                form.errors['body']
+            )
+
+    def test_akismet_form_ham(self):
+        """
+        The Akismet contact form correctly accepts non-spam.
+
+        """
+        data = {'name': 'Test',
+                'email': 'email@example.com',
+                'body': 'Test message.'}
+        with mock.patch('akismet.Akismet', autospec=True) as akismet_mock:
+            instance = akismet_mock.return_value
+            instance.verify_key.return_value = True
+            instance.comment_check.return_value = False
+            form = AkismetContactForm(
+                request=self.request(),
+                data=data
+            )
+            self.assertTrue(form.is_valid())

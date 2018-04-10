@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 A standalone test runner script, configuring the minimum settings
 required for django-contact-form' tests to execute.
@@ -8,8 +7,6 @@ settings and/or templates in order to execute their tests, while
 django-contact-form does not.
 
 """
-
-from __future__ import unicode_literals
 
 import os
 import sys
@@ -28,9 +25,9 @@ SETTINGS_DICT = {
         'django.contrib.auth',
         'django.contrib.contenttypes',
         'django.contrib.sites',
-        'captcha',
+        # 'captcha',
     ),
-    'ROOT_URLCONF': 'contact_form.tests.urls',
+    'ROOT_URLCONF': 'contact_form.tests.test_urls',
     'DATABASES': {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -41,19 +38,24 @@ SETTINGS_DICT = {
         'django.middleware.common.CommonMiddleware',
         'django.middleware.csrf.CsrfViewMiddleware',
     ),
-    'TEMPLATE_DIRS': (
-        os.path.join(APP_DIR, 'tests/templates'),
-    ),
     'SITE_ID': 1,
     'DEFAULT_FROM_EMAIL': 'contact@example.com',
     'MANAGERS': [('Manager', 'noreply@example.com')],
-
-    # RECAPTCHA
-    'RECAPTCHA_PUBLIC_KEY': 'public_key',
-    'RECAPTCHA_PRIVATE_KEY': 'private_key',
-    'NOCAPTCHA': True,
-    'RECAPTCHA_USE_SSL': True,
-    'RECAPTCHA_LANG': 'en',
+    'TEMPLATES': [{
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(APP_DIR, 'tests/templates')],
+        'OPTIONS': {
+            'context_processors': [
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    }],
 }
 
 
@@ -66,14 +68,17 @@ def run_tests():
     # Then, call django.setup() to initialize the application cache
     # and other bits:
     import django
-    if hasattr(django, 'setup'):
-        django.setup()
+    django.setup()
 
     # Now we instantiate a test runner...
     from django.test.utils import get_runner
     TestRunner = get_runner(settings)
 
     # And then we run tests and return the results.
-    test_runner = TestRunner(verbosity=1, interactive=True)
+    test_runner = TestRunner(verbosity=2, interactive=True)
     failures = test_runner.run_tests(['contact_form.tests'])
     sys.exit(bool(failures))
+
+
+if __name__ == '__main__':
+    run_tests()

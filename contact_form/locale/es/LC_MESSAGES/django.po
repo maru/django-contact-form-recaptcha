@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-07-24 15:30-0300\n"
+"POT-Creation-Date: 2018-04-10 10:54+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Maru Berezin\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,21 +18,21 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: forms.py:27
+#: forms.py:21
 msgid "Your name"
 msgstr "Su nombre"
 
-#: forms.py:29
+#: forms.py:23
 msgid "Your email address"
 msgstr "Su dirección email"
 
-#: forms.py:31
-msgid "Subject"
-msgstr "Asunto"
-
-#: forms.py:33
+#: forms.py:27
 msgid "Your message"
 msgstr "Su mensaje"
+
+#: forms.py:149
+msgid "Your message was classified as spam."
+msgstr ""
 
 #: templates/contact_form/contact_form.html:3
 #: templates/contact_form/contact_form.html:9
@@ -52,3 +52,6 @@ msgstr "Mensaje enviado"
 #: templates/contact_form/contact_form_sent.html:11
 msgid "Thank you! We've received your request and we'll contact you shortly."
 msgstr "¡Gracias! Hemos recibido su pedido y pronto nos pondremos en contacto."
+
+#~ msgid "Subject"
+#~ msgstr "Asunto"
