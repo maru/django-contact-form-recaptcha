@@ -27,8 +27,8 @@ Quick start
 
 Requirements:
 
-  - Python (2.7, 3.4, 3.5, 3.6)
-  - Django (1.11, 2.0)
+- Python (2.7, 3.4, 3.5, 3.6)
+- Django (1.11, 2.0)
 
 To use the `contact_forms.forms.ReCaptchaContactForm` form:
 
