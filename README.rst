@@ -25,8 +25,12 @@ for `Django <https://www.djangoproject.com/>`_ sites.
 Quick start
 -----------
 
-To use the :class:`~contact_forms.forms.ReCaptchaContactForm` form,
-you will need to do the following things:
+Requirements:
+
+  - Python (2.7, 3.4, 3.5, 3.6)
+  - Django (1.11, 2.0)
+
+To use the `contact_forms.forms.ReCaptchaContactForm` form:
 
 1. Install django-contact-form-recaptcha::
 
