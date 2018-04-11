@@ -22,6 +22,50 @@ for `Django <https://www.djangoproject.com/>`_ sites.
 
 *  Templates using Twitter Bootstrap version 3.
 
+Quick start
+-----------
+
+To use the :class:`~contact_forms.forms.ReCaptchaContactForm` form,
+you will need to do the following things:
+
+1. Install django-contact-form-recaptcha::
+
+    pip install django-contact-form-recaptcha[captcha]
+
+2. Obtain the reCAPTCHA API keys from https://www.google.com/recaptcha.
+
+3. Supply the API keys for django-contact-form-recaptcha to use. You can
+   either place them in the Django settings ``RECAPTCHA_PUBLIC_KEY``
+   and ``RECAPTCHA_PRIVATE_KEY``, or in the environment variables
+   ``PYTHON_RECAPTCHA_PUBLIC_KEY`` and ``PYTHON_RECAPTCHA_PRIVATE_KEY``.
+
+   Then use the following URLconf:
+
+   .. code-block:: python
+
+      from django.conf.urls import include, url
+
+
+      urlpatterns = [
+          # ... other URL patterns for your site ...
+          url(r'^contact/', include('contact_form.recaptcha_urls')),
+      ]
+
+   If you're using Django 2.0, you can do:
+
+   .. code-block:: python
+
+      from django.conf.urls import include, path
+
+
+      urlpatterns = [
+          # ... other URL patterns for your site ...
+          url(r'^contact/', include('contact_form.recaptcha_urls')),
+      ]
+
+4. Use the default templates or create your owns.
+
+
 Full documentation for all functionality is included and is also
 `available online <http://django-contact-form-recaptcha.readthedocs.io/>`_.
 
