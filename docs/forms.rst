@@ -239,7 +239,7 @@ The ReCaptcha (spam-filtering) contact form class
    run ``pip install django-contact-form-recaptcha``.
 
    Once you have the reCAPTCHA API keys configured, and the
-   ``django-captcha`` module installed, you can drop in
+   ``django-recaptcha`` module installed, you can drop in
    ``ReCaptchaContactForm`` anywhere you would have used
    :class:`ContactForm`. For example, you could define a view
    (subclassing :class:`~contact_form.views.ContactFormView`) like so,
