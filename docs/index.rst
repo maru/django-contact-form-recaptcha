@@ -1,5 +1,5 @@
 django-contact-form-recaptcha |release|
-=============================
+=======================================
 
 django-contact-form-recaptcha provides customizable contact-form functionality
 for `Django <https://www.djangoproject.com/>`_-powered Web sites.

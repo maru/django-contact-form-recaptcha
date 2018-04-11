@@ -16,7 +16,7 @@ supported, on Python 2.7 (Django 1.11 only), 3.4, 3.5, or 3.6.
 
 
 What license is django-contact-form-recaptcha under?
-----------------------------------------------
+----------------------------------------------------
 
 django-contact-form-recaptcha is offered under a three-clause BSD-style
 license; this is `an OSI-approved open-source license
