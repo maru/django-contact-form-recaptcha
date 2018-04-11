@@ -38,10 +38,10 @@ you, by running::
 If you plan to use the included spam-filtering contact form class
 :class:`~contact_form.forms.ReCaptchaContactForm`, you will also need
 the Python ``django-recaptcha`` module. You can manually install it via ``pip
-install django-recaptcha``, or tell ``django-contact-form-recaptcha`` to install it for
-you, by running::
+install django-recaptcha``, or it is installed by default with
+``django-contact-form-recaptcha``, by running::
 
-    pip install django-contact-form-recaptcha[captcha]
+    pip install django-contact-form-recaptcha
 
 If you do not already have a supported version of Django installed,
 installing django-contact-form-recaptcha will automatically install the most

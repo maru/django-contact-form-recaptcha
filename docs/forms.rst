@@ -235,8 +235,8 @@ The ReCaptcha (spam-filtering) contact form class
    You will also need `the Python reCAPTCHA module
    <https://github.com/praekelt/django-recaptcha>`_ to communicate with the reCAPTCHA
    web service. You can install it by running ``pip install django-recaptcha``,
-   or django-contact-form-recaptcha can install it automatically for you if you
-   run ``pip install django-contact-form-recaptcha[captcha]``.
+   or django-contact-form-recaptcha installs it automatically for you when you
+   run ``pip install django-contact-form-recaptcha``.
 
    Once you have the reCAPTCHA API keys configured, and the
    ``django-captcha`` module installed, you can drop in

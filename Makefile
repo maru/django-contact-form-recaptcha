@@ -6,7 +6,7 @@ PYTHON_VERSION=3.6.0
 endif
 
 ifndef DJANGO_VERSION
-DJANGO_VERSION=1.10
+DJANGO_VERSION=2.0
 endif
 
 .PHONY: clean
@@ -20,7 +20,8 @@ clean:
 	find ${PACKAGE_NAME} -type f -name '*.pyc' -delete
 	rm -f MANIFEST
 	rm -rf coverage .coverage .coverage*
-	pip uninstall -y Django
+	rm -fr .tox/
+	pip uninstall -y django-contact-form-recaptcha
 
 .PHONY: venv
 venv:

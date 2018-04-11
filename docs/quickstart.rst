@@ -172,7 +172,7 @@ form classes included in django-contact-form-recaptcha:
       1. Install the Python ``reCAPTCHA`` module to allow django-contact-form-recaptcha
          to communicate with the reCAPTCHA service. You can do this via ``pip
          install django-recaptcha``, or as you install django-contact-form-recaptcha via ``pip
-         install django-contact-form-recaptcha[captcha]``.
+         install django-contact-form-recaptcha``.
 
       2. Obtain the reCAPTCHA API keys from <https://www.google.com/recaptcha>.
 

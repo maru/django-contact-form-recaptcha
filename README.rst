@@ -34,7 +34,7 @@ To use the `contact_forms.forms.ReCaptchaContactForm` form:
 
 1. Install django-contact-form-recaptcha::
 
-    pip install django-contact-form-recaptcha[captcha]
+    pip install django-contact-form-recaptcha
 
 2. Obtain the reCAPTCHA API keys from https://www.google.com/recaptcha.
 
