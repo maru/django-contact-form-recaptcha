@@ -4,3 +4,4 @@ include README.rst
 include Makefile
 recursive-include docs *
 recursive-include contact_form/locale *
+recursive-include contact_form/templates *

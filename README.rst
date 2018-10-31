@@ -12,7 +12,7 @@ django-contact-form-recaptcha
 This application provides simple, extensible contact-form functionality
 for `Django <https://www.djangoproject.com/>`_ sites.
 
-.. image:: docs/_static/contact_form_recaptcha.png
+.. image:: https://raw.githubusercontent.com/maru/django-contact-form-recaptcha/master/docs/_static/contact_form_recaptcha.png
 
 *  Mail header 'From: "Your Name" <your@email.com>', so it's easy to reply to the sender.
 
@@ -20,19 +20,17 @@ for `Django <https://www.djangoproject.com/>`_ sites.
 
 *  Uses `reCAPTCHA <https://www.google.com/recaptcha>`_ to block spam robots.
 
-*  Templates using Twitter Bootstrap version 3.
-
 Quick start
 -----------
 
 Requirements:
 
-- Python (2.7, 3.4, 3.5, 3.6)
-- Django (1.11, 2.0)
+-  Python (2.7, 3.4, 3.5, 3.6)
+-  Django (1.11, 2.0)
 
 To use the `contact_forms.forms.ReCaptchaContactForm` form:
 
-1. Install django-contact-form-recaptcha::
+1. Install django-contact-form-recaptcha:
 
     pip install django-contact-form-recaptcha
 
@@ -43,7 +41,17 @@ To use the `contact_forms.forms.ReCaptchaContactForm` form:
    and ``RECAPTCHA_PRIVATE_KEY``, or in the environment variables
    ``PYTHON_RECAPTCHA_PUBLIC_KEY`` and ``PYTHON_RECAPTCHA_PRIVATE_KEY``.
 
-   Then use the following URLconf:
+4. Add the application ``captcha`` in the Django settings:
+
+   .. code-block:: python
+
+      INSTALLED_APPS = [
+          ...
+          'captcha',
+      ]
+
+
+5. Then use the following URLconf:
 
    .. code-block:: python
 
@@ -59,16 +67,30 @@ To use the `contact_forms.forms.ReCaptchaContactForm` form:
 
    .. code-block:: python
 
-      from django.conf.urls import include, path
+      from django.urls import include, path
 
 
       urlpatterns = [
           # ... other URL patterns for your site ...
-          url(r'^contact/', include('contact_form.recaptcha_urls')),
+          path('contact/', include('contact_form.recaptcha_urls')),
       ]
 
-4. Use the default templates or create your owns.
 
+6. Create your templates in your ``templates`` directory:
+
+   *  contact_form/contact_form.html
+   *  contact_form/contact_form_sent.html
+   *  contact_form/contact_form.txt
+   *  contact_form/contact_form_subject.txt
+
+   Or you can use the templates provided by this package. Remember to add
+   the application ``contact_form`` in the Django settings.
+
+7. Emails are sent to the ``MANAGERS`` defined in your Django settings:
+
+   .. code-block:: python
+
+      MANAGERS = [('John', 'john@example.com'),]
 
 Full documentation for all functionality is included and is also
 `available online <http://django-contact-form-recaptcha.readthedocs.io/>`_.

@@ -184,6 +184,10 @@ class ReCaptchaContactForm(ContactForm):
     - settings.RECAPTCHA_LANG: language code, string.
       See https://developers.google.com/recaptcha/docs/language
     """
+
+    # Use reCAPTCHA v2
+    setattr(settings, 'NOCAPTCHA', True)
+
     import os
     from captcha.fields import ReCaptchaField
     captcha = ReCaptchaField(
