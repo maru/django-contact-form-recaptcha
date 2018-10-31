@@ -243,9 +243,9 @@ class ReCaptchaContactFormTests(TestCase):
     def test_captcha_envvar_disabled(self):
         os.environ['RECAPTCHA_TESTING'] = 'False'
         data = self.valid_data
-        data.update({'g-recaptcha-response': 'PASSED'}
-                    if getattr(settings, 'NOCAPTCHA', True) else
-                    {'recaptcha_response_field': 'PASSED'})
+        # data.update({'g-recaptcha-response': 'PASSED'}
+        #             if getattr(settings, 'NOCAPTCHA', True) else
+        #             {'recaptcha_response_field': 'PASSED'})
         form = ReCaptchaContactForm(
             request=self.request(),
             data=data
