@@ -31,8 +31,8 @@ setup(name='django-contact-form-recaptcha',
                    'Programming Language :: Python :: 3.6',
                    'Topic :: Utilities'],
       install_requires=[
-          'Django>=1.11',
-          'django-recaptcha',
+          'Django>=4.1.5',
+          'django-recaptcha>=3.0.0',
       ],
       extras_require={
           'akismet': ['akismet'],

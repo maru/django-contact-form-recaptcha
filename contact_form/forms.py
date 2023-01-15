@@ -6,7 +6,7 @@ a web interface.
 from django import forms
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.core.mail import send_mail
 from django.template import loader
 
@@ -191,7 +191,6 @@ class ReCaptchaContactForm(ContactForm):
     import os
     from captcha.fields import ReCaptchaField
     captcha = ReCaptchaField(
-      attrs={'lang': getattr(settings, 'RECAPTCHA_LANG', None),
-             'RECAPTCHA_PUBLIC_KEY': os.getenv('PYTHON_RECAPTCHA_PUBLIC_KEY'),
-             'RECAPTCHA_PRIVATE_KEY': os.getenv('PYTHON_RECAPTCHA_PRIVATE_KEY')
-             })
+      os.getenv('PYTHON_RECAPTCHA_PUBLIC_KEY'),
+      os.getenv('PYTHON_RECAPTCHA_PRIVATE_KEY')
+    )
